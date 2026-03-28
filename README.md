@@ -1,32 +1,40 @@
-# Breeze
+# Muhammad Yafi Alhakim — Personal Site
 
-A minimal, clean Astro theme for personal websites and blogs.
+Personal website and blog of **Muhammad Yafi Alhakim**, a Fullstack Engineer from Jakarta, Indonesia.
+Currently working at [MySkill.id](https://myskill.id) building fast, scalable, and user-friendly web applications.
 
-Built with [Astro 5](https://astro.build), [Tailwind CSS v4](https://tailwindcss.com), and TypeScript.
+**Live site:** [yafialhakim.netlify.app](https://yafialhakim.netlify.app)
 
-[中文文档 / Chinese Documentation](./README.zh-CN.md)
+## About
 
-## Features
+- **Role:** Frontend Engineer @ MySkill.id
+- **Location:** Jakarta, Indonesia
+- **GitHub:** [yaffalhakim1](https://github.com/yaffalhakim1)
+- **LinkedIn:** [yafialhakim](https://www.linkedin.com/in/yafialhakim/)
+- **Email:** yafialhakim64@gmail.com
+- **CV:** [self.so/yafialhakim](https://self.so/yafialhakim)
 
-- Dark / Light mode with smooth toggle
-- Full-text search (Pagefind, Cmd+K)
-- RSS feed and sitemap
-- Artalk comments (optional)
-- Umami analytics (optional)
-- Content collections (posts, projects, categories, tags, friends)
-- Table of contents for posts
-- Expressive Code syntax highlighting
-- View Transitions
-- Responsive design
-- OKLch color system with easy hue customization
+## Stack
 
-## Quick Start
+- **Frontend:** React, Next.js, TypeScript, Tailwind CSS, Astro
+- **Backend & Infra:** Supabase, Docker, Vercel, Netlify, cPanel
+- **Tools:** VS Code, Git, Postman, Figma, Notion
+
+## Projects
+
+| Project           | Tech                             | Demo                                                 |
+| ----------------- | -------------------------------- | ---------------------------------------------------- |
+| Anonymous Message | Next.js, TypeScript, Supabase    | [Live](https://anonymous-website-message.vercel.app) |
+| Pokeredux         | React, TypeScript, Redux Toolkit | [Live](https://pokredux.vercel.app)                  |
+| Chill Out         | React, TypeScript                | [Live](https://chill-out.vercel.app)                 |
+| Movies            | Next.js, TypeScript, TMDB API    | [Live](https://movies-13.vercel.app)                 |
+| Simple E-commerce | Next.js, TypeScript, RSC         | [Live](https://simple-ecommerce-appdir.vercel.app)   |
+| Sumz              | React, TypeScript, OpenAI API    | [Live](https://summarizer-drab.vercel.app)           |
+| Todo List         | React, TypeScript, Supabase      | [Live](https://todo-supabasev2.vercel.app)           |
+
+## Development
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/astro-theme-breeze.git my-site
-cd my-site
-
 # Install dependencies
 pnpm install
 
@@ -37,73 +45,29 @@ pnpm dev
 pnpm build
 ```
 
-## Configuration
+## Site Configuration
 
-All site configuration is in `src/config/site.ts`. This is the only file you need to edit to personalize the theme.
+All site configuration is in `src/config/site.ts`.
 
-| Section | Description |
-|---------|-------------|
-| `meta` | Site title, description, author, logo, language |
-| `navigation` | Navigation menu items with subtitle labels |
-| `social` | Social links (GitHub, Email, etc.) |
-| `hero` | Homepage greeting, description, info cards |
-| `footer` | Copyright and credit text |
-| `comments` | Artalk comments configuration |
-| `features` | Toggle search, RSS |
-| `tools` | Tools/Stack page data |
-| `labels` | All UI text labels (for i18n) |
+| Section      | Description                               |
+| ------------ | ----------------------------------------- |
+| `meta`       | Site title, description, author, language |
+| `navigation` | Navigation menu items                     |
+| `social`     | Social links (GitHub, LinkedIn, Email)    |
+| `hero`       | Homepage greeting and description         |
+| `footer`     | Copyright text                            |
+| `comments`   | Artalk comments (currently disabled)      |
+| `features`   | Toggle search, RSS                        |
+| `tools`      | Tools/Stack page data                     |
 
-Also update `astro.config.mjs` to set your `site` URL.
+Also update `astro.config.mjs` to set the `site` URL.
 
-## Content
+## Blog
 
-### Blog Posts
+Posts are loaded from [Hashnode](https://hashnode.com) via GraphQL at build time.
+Set `HASHNODE_PUBLICATION_ID` in `.env` to connect your Hashnode publication.
 
-Add Markdown or MDX files to `src/content/posts/`:
-
-```yaml
----
-title: My First Post
-createdAt: 2025-01-01
-category: technology
-tags: [astro, tutorial]
-summary: A brief description of the post.
----
-```
-
-### About Page
-
-Edit `src/content/pages/about.md` — pure Markdown, no component knowledge needed.
-
-### Projects
-
-Add to `src/content/projects/` with frontmatter: `title`, `description`, `tech`, `link`, `status`.
-
-### Categories & Tags
-
-Edit `src/content/miscs/categories.json` and `src/content/miscs/tags.json`.
-
-### Friends
-
-Edit `src/content/miscs/friends.json` with `name`, `description`, `link`, `avatar`.
-
-## Theme Colors
-
-Edit `src/styles/theme.css`. All colors use OKLch with a consistent hue value (default: 165).
-
-To change the color palette, find-and-replace the hue number:
-
-- `165` = Sage Green (default)
-- `250` = Ocean Blue
-- `280` = Lavender Purple
-- `330` = Rose Pink
-- `30` = Warm Orange
-
-## Comments (Artalk)
-
-1. Set up an [Artalk](https://artalk.js.org) server
-2. In `src/config/site.ts`, set `comments.enabled: true` and `comments.artalk.server` to your server URL
-3. To disable comments, set `comments.enabled: false`
+Local `.md` files in `src/content/posts/` can also be used as fallback or standalone posts.
 
 ## Analytics (Umami)
 
@@ -112,13 +76,18 @@ To change the color palette, find-and-replace the hue number:
 
 ## Deploy
 
-Works with any static hosting: Vercel, Netlify, Cloudflare Pages, etc.
+Deployed on [Netlify](https://netlify.com). Compatible with Vercel, Cloudflare Pages, or any static host.
 
 ```bash
 pnpm build
+# Output is in dist/
 ```
 
-The output is in `dist/`.
+---
+
+## Credits
+
+This site is built on top of [Breeze](https://github.com/aozora-bg/astro-theme-breeze) — a minimal, clean Astro theme for personal websites and blogs, built with [Astro 5](https://astro.build), [Tailwind CSS v4](https://tailwindcss.com), and TypeScript.
 
 ## License
 
