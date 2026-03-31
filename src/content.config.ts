@@ -1,6 +1,10 @@
 import { file, glob } from "astro/loaders";
 import { z, defineCollection } from "astro:content";
-import { hashnodeLoader, hashnodeTagsLoader } from "@/loaders/hashnode";
+import {
+  hashnodeLoader,
+  hashnodeTagsLoader,
+  hashnodeCategoriesLoader,
+} from "@/loaders/hashnode";
 
 function slug() {
   return z
@@ -16,7 +20,9 @@ const posts = defineCollection({
     title: z.string().max(128),
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
-    category: z.object({ collection: z.literal("categories"), id: z.string() }),
+    category: z
+      .object({ collection: z.literal("categories"), id: z.string() })
+      .optional(),
     tags: z
       .array(z.object({ collection: z.literal("tags"), id: z.string() }))
       .optional()
@@ -52,7 +58,7 @@ const projects = defineCollection({
 });
 
 const categories = defineCollection({
-  loader: file("./src/content/miscs/categories.json"),
+  loader: hashnodeCategoriesLoader(),
   schema: z.object({
     name: z.string().max(32),
     slug: slug(),

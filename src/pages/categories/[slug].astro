@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 
   return allCategories.map((cat) => {
     const filteredPosts = allPosts.filter(
-      (post) => post.data.category.id === cat.id,
+      (post) => post.data.category && post.data.category.id === cat.id,
     );
     return {
       params: { slug: cat.data.slug },

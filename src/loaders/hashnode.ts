@@ -188,18 +188,23 @@ export function hashnodeLoader(): Loader {
           id: toSlug(t.slug || t.name),
         }));
 
+        const category = post.series
+          ? {
+              collection: "categories" as const,
+              id: toSlug(post.series.slug),
+            }
+          : {
+              collection: "categories" as const,
+              id: "uncategorized",
+            };
+
         const data = await parseData({
           id: post.slug,
           data: {
             title: post.title,
             createdAt: new Date(post.publishedAt),
             updatedAt: post.updatedAt ? new Date(post.updatedAt) : undefined,
-            // All posts are mapped to the built-in "uncategorized" category.
-            // To map by Hashnode series instead, adjust this field.
-            category: {
-              collection: "categories" as const,
-              id: "uncategorized",
-            },
+            category,
             tags: tagRefs,
             summary: post.brief ?? "",
             cover: post.coverImage?.url,
@@ -277,6 +282,71 @@ export function hashnodeTagsLoader(): Loader {
           data: {
             name: tag.name,
             slug: id,
+          },
+        });
+
+        store.set({ id, data });
+      }
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Categories loader (derived from Hashnode series)
+// ---------------------------------------------------------------------------
+
+export function hashnodeCategoriesLoader(): Loader {
+  return {
+    name: "hashnode-categories-loader",
+
+    async load({ store, logger, parseData }) {
+      const env = loadEnv(
+        process.env.NODE_ENV ?? "development",
+        process.cwd(),
+        "",
+      );
+      const host =
+        env.HASHNODE_PUBLICATION_ID ?? process.env.HASHNODE_PUBLICATION_ID;
+
+      if (!host) {
+        logger.warn(
+          "HASHNODE_PUBLICATION_ID is not set — skipping Hashnode categories fetch.",
+        );
+        return;
+      }
+
+      const rawPosts = await getCachedPosts(host);
+
+      const seen = new Map<string, { name: string; slug: string }>();
+      for (const post of rawPosts) {
+        if (post.series) {
+          const id = toSlug(post.series.slug);
+          if (!seen.has(id)) {
+            seen.set(id, { name: post.series.name, slug: id });
+          }
+        }
+      }
+
+      // Add uncategorized as fallback
+      if (!seen.has("uncategorized")) {
+        seen.set("uncategorized", {
+          name: "Uncategorized",
+          slug: "uncategorized",
+        });
+      }
+
+      logger.info(`Derived ${seen.size} categories from Hashnode series.`);
+
+      store.clear();
+
+      for (const [id, cat] of seen) {
+        const data = await parseData({
+          id,
+          data: {
+            name: cat.name,
+            slug: cat.slug,
+            description: "",
+            icon: "mdi:folder",
           },
         });
 

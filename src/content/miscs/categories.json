@@ -18,6 +18,12 @@
     "icon": "mdi:coffee"
   },
   {
+    "name": "Rust",
+    "slug": "rust",
+    "description": "Rust programming language articles",
+    "icon": "mdi:language-rust"
+  },
+  {
     "name": "Uncategorized",
     "slug": "uncategorized",
     "icon": "mdi:folder"

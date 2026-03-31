@@ -8,6 +8,7 @@ const allCategories = await getCollection("categories");
 const allPosts = await getPosts();
 
 const categoryCounts = allPosts.reduce((acc: Record<string, number>, post) => {
+  if (!post.data.category) return acc;
   const catId = post.data.category.id;
   acc[catId] = (acc[catId] || 0) + 1;
   return acc;

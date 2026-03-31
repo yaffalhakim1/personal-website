@@ -10,10 +10,9 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const category = await getEntry(
-  post.data.category.collection,
-  post.data.category.id,
-);
+const category = post.data.category
+  ? await getEntry(post.data.category.collection, post.data.category.id)
+  : null;
 
 // Auto-detect if post is new based on creation date
 // Draft posts should not show "new" badge
@@ -45,9 +44,13 @@ const isNew = !post.data.draft && (post.data.new || (site.features.newPostDays >
       class="mt-2 font-mono text-[11px] text-muted-foreground italic opacity-60"
     >
       {formatDate(post.data.createdAt)} —
-      <a href={`/categories/${category?.id}`} class="hover:text-primary">
-        {category?.data.name}
-      </a>
+      {category ? (
+        <a href={`/categories/${category.id}`} class="hover:text-primary">
+          {category.data.name}
+        </a>
+      ) : (
+        <span class="text-muted-foreground/60">Uncategorized</span>
+      )}
     </p>
   </div>
   <span class="text-border transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary">
