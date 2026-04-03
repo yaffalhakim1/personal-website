@@ -1,20 +1,24 @@
 ---
 import site from "@/config/site";
 import { Image } from "astro:assets";
+import NothingToggle from "./NothingToggle.astro";
 ---
 
 <div
-  class="mb-6 flex items-center gap-4 md:mb-10 md:flex-col md:items-start md:gap-0"
+  class="mb-6 flex flex-col gap-4 md:mb-10 md:items-start md:gap-0"
 >
-  <div class="flex h-10 w-10 items-center justify-center md:h-11 md:w-11">
-    <Image
-      loading={"eager"}
-      src={site.meta.logo}
-      alt={"Site logo"}
-      width={44}
-      height={44}
-      class="rounded-xl"
-    />
+  <div class="flex items-center gap-4 w-full justify-between md:justify-start">
+    <div class="flex h-10 w-10 items-center justify-center md:h-11 md:w-11">
+      <Image
+        loading={"eager"}
+        src={site.meta.logo}
+        alt={"Site logo"}
+        width={44}
+        height={44}
+        class="rounded-xl"
+      />
+    </div>
+    <NothingToggle />
   </div>
   <div class="md:mt-8">
     <h1

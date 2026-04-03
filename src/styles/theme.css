@@ -77,3 +77,32 @@
   --shadow-main: var(--shadow-main);
   --font-display: var(--font-display);
 }
+
+.theme-nothing {
+  /* --- Nothing Mode: Industrial Monochromatic --- */
+  --background: #000000;
+  --foreground: #FFFFFF;
+
+  --card: #111111;
+  --card-foreground: #E8E8E8;
+
+  --primary: #FF5500;
+  --primary-foreground: #FFFFFF;
+
+  --muted: #1A1A1A;
+  --muted-foreground: #999999;
+
+  --border: #222222;
+  --shadow-main: none;
+
+  /* Fonts Override (will only apply to typography classes referencing this, or we can use custom vars) */
+  --font-display-nothing: "Doto", "Space Mono", monospace;
+  --font-body-nothing: "Space Grotesk", "DM Sans", system-ui, sans-serif;
+  --font-mono-nothing: "Space Mono", "JetBrains Mono", monospace;
+
+  /* Adjust theme specific variables */
+  --callout-info: #999999;
+  --callout-warning: #D4A843;
+  --callout-danger: #D71921;
+  --callout-success: #4A9E5C;
+}

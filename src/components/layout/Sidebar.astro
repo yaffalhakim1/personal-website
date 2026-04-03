@@ -2,6 +2,7 @@
 import site from "@/config/site";
 import Nav from "./Nav.astro";
 import ThemeToggle from "./ThemeToggle.astro";
+import NothingToggle from "./NothingToggle.astro";
 import { Icon } from "astro-icon/components";
 import Brand from "./Brand.astro";
 import SearchModal from "../blocks/SearchModal.astro";
@@ -18,22 +19,26 @@ import SearchBox from "./SearchBox.astro";
 
   <Nav />
 
-  <div class="mt-8 flex items-center justify-between md:mt-14">
-    <div class="flex gap-4 text-muted-foreground/60">
-      {
-        site.social.map((item) => (
-          <a
-            href={item.href}
-            class="cursor-pointer transition-colors hover:text-primary"
-            aria-label={item.name}
-          >
-            <Icon name={item.icon} size={24} />
-          </a>
-        ))
-      }
+  <div class="mt-8 flex flex-col gap-4 md:mt-14">
+    <div class="flex items-center justify-between">
+      <div class="flex gap-4 text-muted-foreground/60">
+        {
+          site.social.map((item) => (
+            <a
+              href={item.href}
+              class="cursor-pointer transition-colors hover:text-primary"
+              aria-label={item.name}
+            >
+              <Icon name={item.icon} size={24} />
+            </a>
+          ))
+        }
+      </div>
+      
+      <div class="flex gap-4 items-center">
+        <ThemeToggle />
+      </div>
     </div>
-
-    <ThemeToggle />
   </div>
 
   <SearchModal />

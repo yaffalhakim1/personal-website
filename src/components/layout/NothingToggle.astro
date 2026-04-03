@@ -1,0 +1,113 @@
+---
+// src/components/layout/NothingToggle.astro
+---
+
+<button
+  id="nothing-toggle"
+  class="border-border-visible group flex h-8 items-center justify-center rounded-full border bg-transparent px-3 text-[10px] font-bold tracking-[0.06em] text-muted-foreground uppercase transition-all duration-300 hover:border-foreground hover:text-foreground"
+  title="Toggle Nothing Mode"
+>
+  <span id="nothing-label-off" class="block">Nothing Mode Off</span>
+  <span id="nothing-label-on" class="hidden">Nothing Mode On</span>
+</button>
+
+<style>
+  /* Base styles for the technical toggle */
+  button#nothing-toggle {
+    font-family: var(--font-mono-nothing, "Space Mono", monospace);
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const storedTheme = localStorage?.getItem("theme-nothing");
+    // Default to true (Nothing mode) if not set
+    const isNothingMode = storedTheme === null ? true : storedTheme === "true";
+
+    const applyNothingTheme = (active: boolean) => {
+      const element = document.documentElement;
+      const toggle = document.getElementById("nothing-toggle");
+      const labelOff = document.getElementById("nothing-label-off");
+      const labelOn = document.getElementById("nothing-label-on");
+      // The original layout theme toggle
+      const themeToggleBtn = document.getElementById("theme-toggle");
+
+      if (active) {
+        element.classList.add("theme-nothing");
+        // Update toggle styles to active Button
+        if (toggle && labelOff && labelOn) {
+          toggle.classList.add(
+            "bg-foreground",
+            "text-background",
+            "border-foreground",
+          );
+          toggle.classList.remove(
+            "bg-transparent",
+            "text-muted-foreground",
+            "border-border-visible",
+          );
+          labelOff.classList.add("hidden");
+          labelOff.classList.remove("block");
+          labelOn.classList.add("block");
+          labelOn.classList.remove("hidden");
+        }
+        // visually disable regular toggle
+        if (themeToggleBtn) {
+          themeToggleBtn.style.opacity = "0.3";
+          themeToggleBtn.style.pointerEvents = "none";
+        }
+      } else {
+        element.classList.remove("theme-nothing");
+        // Update toggle styles to inactive Button
+        if (toggle && labelOff && labelOn) {
+          toggle.classList.remove(
+            "bg-foreground",
+            "text-background",
+            "border-foreground",
+          );
+          toggle.classList.add(
+            "bg-transparent",
+            "text-muted-foreground",
+            "border-border-visible",
+          );
+          labelOff.classList.remove("hidden");
+          labelOff.classList.add("block");
+          labelOn.classList.remove("block");
+          labelOn.classList.add("hidden");
+        }
+        // visually re-enable regular toggle
+        if (themeToggleBtn) {
+          themeToggleBtn.style.opacity = "1";
+          themeToggleBtn.style.pointerEvents = "auto";
+        }
+      }
+    };
+
+    // Apply initially
+    applyNothingTheme(isNothingMode);
+
+    const handleToggleClick = () => {
+      const active = localStorage.getItem("theme-nothing") === "true";
+      const newActive = !active;
+      localStorage.setItem("theme-nothing", newActive.toString());
+      applyNothingTheme(newActive);
+    };
+
+    const nothingToggle = document.getElementById("nothing-toggle");
+    nothingToggle?.addEventListener("click", handleToggleClick);
+  });
+</script>
+
+<script is:inline>
+  // Apply nothing mode immediately on page load to prevent flash
+  function applyInitialNothingTheme() {
+    const storedTheme = localStorage?.getItem("theme-nothing");
+    if (storedTheme === null || storedTheme === "true") {
+      document.documentElement.classList.add("theme-nothing");
+      if (storedTheme === null) localStorage.setItem("theme-nothing", "true");
+    }
+  }
+
+  document.addEventListener("astro:after-swap", applyInitialNothingTheme);
+  applyInitialNothingTheme();
+</script>
