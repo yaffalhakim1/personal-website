@@ -31,6 +31,81 @@ const category = categoryMatch ?? { data: { slug: "uncategorized", name: "Uncate
 const allTags = await getTagsCollection("tags");
 const tagIds: string[] = (post.data.tags ?? []).map((t: { id: string }) => t.id);
 const tags = allTags.filter((t) => tagIds.includes(t.id) || tagIds.includes(t.data.slug));
+
+// --- Transformation for Hashnode Content ---
+
+/**
+ * Transforms Hashnode's HTML blockquotes that use [!TYPE] syntax 
+ * into beautifully styled callouts consistent with the Breeze theme.
+ */
+function transformAlerts(html: string) {
+  const ALERT_CONFIG = {
+    NOTE: { 
+      color: "var(--callout-info)", 
+      label: "Note", 
+      svg: `<path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>`
+    },
+    TIP: { 
+      color: "var(--callout-success)", 
+      label: "Tip", 
+      svg: `<path fill="currentColor" d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/>`
+    },
+    IMPORTANT: { 
+      color: "var(--callout-danger)", 
+      label: "Important", 
+      svg: `<path fill="currentColor" d="M12 2L1 21h22L12 2zm0 17h-2v-2h2v2zm0-4h-2v-4h2v4z"/>`
+    },
+    WARNING: { 
+      color: "var(--callout-warning)", 
+      label: "Warning", 
+      svg: `<path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>`
+    },
+    CAUTION: { 
+      color: "var(--callout-danger)", 
+      label: "Caution", 
+      svg: `<path fill="currentColor" d="M15.73 3H8.27L3 8.27v7.46L8.27 21h7.46L21 15.73V8.27L15.73 3zM12 17.3c-.72 0-1.3-.58-1.3-1.3 0-.72.58-1.3 1.3-1.3.72 0 1.3.58 1.3 1.3 0 .72-.58 1.3-1.3 1.3zm1-4.3h-2V7h2v6z"/>`
+    },
+  };
+
+  // This regex matches <blockquote> blocks starting with [!TYPE]
+  // It handles both single-paragraph and multi-paragraph blockquotes.
+  return html.replace(
+    /<blockquote>([\s\S]*?)<\/blockquote>/gi,
+    (match, innerContent) => {
+      const typeMatch = innerContent.match(/\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/i);
+      if (!typeMatch) return match;
+
+      const type = typeMatch[1].toUpperCase() as keyof typeof ALERT_CONFIG;
+      const config = ALERT_CONFIG[type];
+      
+      // Remove the marker and clean up the content
+      const cleanContent = innerContent
+        .replace(/\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/gi, "")
+        .trim();
+
+      // We replicate the Callout.astro component structure here
+      // Note: We use raw CSS for the background to match our OKLCH logic
+      return `
+        <div class="custom-callout not-prose my-12 flex gap-4 rounded-xl p-6 transition-all border border-border/40" 
+             style="background-color: oklch(from ${config.color} l c h / 0.08); border-left: 4px solid ${config.color};">
+          <div class="flex-none text-xl mt-0.5" style="color: ${config.color}">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">${config.svg}</svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-2 font-extrabold tracking-widest uppercase text-[10px]" style="color: ${config.color}">
+              <span class="opacity-90">${config.label}</span>
+            </div>
+            <div class="text-[14px] leading-relaxed font-normal text-muted-foreground/90 prose-p:mb-0">
+              ${cleanContent}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  );
+}
+
+const finalHtml = transformAlerts(htmlBody);
 ---
 
 <Layout title={post.data.title} description={post.data.summary}>
@@ -118,7 +193,7 @@ const tags = allTags.filter((t) => tagIds.includes(t.id) || tagIds.includes(t.da
         "prose-",
       ]}
       data-pagefind-body
-      set:html={htmlBody}
+      set:html={finalHtml}
     />
 
     <div
